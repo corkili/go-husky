@@ -1,0 +1,5 @@
+user: root
+password: 123456
+dbname: husky
+host: localhost:3306
+options: charset=utf8&parseTime=True&loc=Local

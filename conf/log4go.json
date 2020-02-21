@@ -1,0 +1,18 @@
+{
+  "console": {
+    "enable": true,
+    "level": "DEBUG"
+  },
+  "files": [{
+    "enable": true,
+    "level": "DEBUG",
+    "filename":"./logs/husky.log",
+    "category": "logs",
+    "pattern": "[%D %T] [%L] (%S) %M",
+    "rotate": true,
+    "maxsize": "500M",
+    "maxlines": "10K",
+    "daily": true,
+    "sanitize": true
+  }]
+}
