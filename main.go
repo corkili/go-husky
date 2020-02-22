@@ -4,8 +4,10 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"go-husky/internal/controller"
 	"go-husky/internal/log"
 	"go-husky/internal/server"
+	"go-husky/internal/service"
 )
 
 var logger = log.GetLogger()
@@ -18,8 +20,9 @@ func main() {
 	builder.SetPort(8000).
 		EnableLog(true).
 		EnableRecovery(true).
-		AddMiddleware(sessions.Sessions("auth_session", store)).
-		AddRequestMapping(server.RequestMapping{UrlPath: "/test_session", Method: server.GET, Handler: testSession})
+		SetAuthHandler(service.CheckIfUserLogin).
+		AddMiddleware(sessions.Sessions("auth", store)).
+		AddRequestMapping(controller.GetUserController().GetRequestMappings()...)
 	ginServer := builder.Build()
 	err := ginServer.Start()
 	if err != nil {

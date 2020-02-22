@@ -3,7 +3,9 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-husky/internal/api"
 	"go-husky/internal/log"
+	"net/http"
 )
 
 var logger = log.GetLogger()
@@ -18,6 +20,7 @@ type Builder struct {
 	port uint16
 	requestMappings []RequestMapping
 	middlewareList []gin.HandlerFunc
+	authHandler func(c *gin.Context) (ok bool, rsp *api.Response)
 	enableLog bool
 	enableRecovery bool
 }
@@ -33,6 +36,7 @@ type RequestMapping struct {
 	UrlPath string
 	Method HttpMethod
 	Handler gin.HandlerFunc
+	Auth bool
 }
 
 func (ginServer *GinServer) Start() (err error) {
@@ -57,6 +61,11 @@ func (builder *Builder) AddMiddleware(middleware ...gin.HandlerFunc) *Builder {
 		builder.middlewareList = []gin.HandlerFunc{}
 	}
 	builder.middlewareList = append(builder.middlewareList, middleware...)
+	return builder
+}
+
+func (builder *Builder) SetAuthHandler(handler func(c *gin.Context) (ok bool, rsp *api.Response)) *Builder {
+	builder.authHandler = handler
 	return builder
 }
 
@@ -93,11 +102,12 @@ func (builder *Builder) Build() *GinServer {
 		for _, requestMapping := range builder.requestMappings {
 			if ginServer.checkRequestMapping(&requestMapping) {
 				ginServer.requestMappings = append(ginServer.requestMappings, requestMapping)
+				handler := buildRequestHandler(requestMapping.Handler, requestMapping.Auth, builder.authHandler)
 				switch requestMapping.Method {
 					case GET:
-						ginServer.ginEngine.GET(requestMapping.UrlPath, requestMapping.Handler)
+						ginServer.ginEngine.GET(requestMapping.UrlPath, handler)
 					case POST:
-						ginServer.ginEngine.POST(requestMapping.UrlPath, requestMapping.Handler)
+						ginServer.ginEngine.POST(requestMapping.UrlPath, handler)
 				}
 			}
 		}
@@ -118,6 +128,21 @@ func (ginServer *GinServer) checkRequestMapping(requestMapping *RequestMapping) 
 	} else {
 		logger.Error("requestMapping is invalid")
 		return false
+	}
+}
+
+func buildRequestHandler(handlerFunc gin.HandlerFunc, auth bool, authHandler func(c *gin.Context) (ok bool, rsp *api.Response)) gin.HandlerFunc {
+	if auth && authHandler != nil {
+		return func(c *gin.Context) {
+			ok, rsp := authHandler(c)
+			if ok {
+				handlerFunc(c)
+			} else {
+				c.JSON(http.StatusOK, rsp)
+			}
+		}
+	} else {
+		return handlerFunc
 	}
 }
 
