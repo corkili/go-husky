@@ -13,7 +13,7 @@ const (
 
 type User struct {
 	gorm.Model
-	Phone    string 	`gorm:"type:varchar(20);not null;index:phone_index"`
+	Phone    string 	`gorm:"type:varchar(20);not null;index:phone_index;unique"`
 	Password string 	`gorm:"type:varchar(512);not null"`
 	Username string		`gorm:"type:varchar(100);not null"`
 	Roll		 UserRole `gorm:"not null"`
