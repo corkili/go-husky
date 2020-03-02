@@ -59,16 +59,17 @@ func (dao *CommonDao) DeleteEntity(entity entity.Entity) (err error)  {
 	}
 }
 
-func (dao *CommonDao) DeleteEntities(entities ...entity.Entity) (successCount uint)  {
-	successCount = 0
+func (dao *CommonDao) DeleteEntities(entities ...entity.Entity) (successIds []uint)  {
+	successIds = make([]uint, 0)
 	for _, e := range entities {
+		id := e.GetId()
 		if err := dao.DeleteEntity(e); err != nil {
 			logger.Warn(err.Error())
 		} else {
-			successCount++
+			successIds = append(successIds, id)
 		}
 	}
-	return successCount
+	return successIds
 }
 
 

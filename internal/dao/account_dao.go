@@ -22,7 +22,16 @@ func GetAccountDao() (dao *AccountDao) {
 
 func (dao *AccountDao) FindById(id uint) (account *entity.Account) {
 	account = &entity.Account{}
-	dao.db.First(account, id)
+	dao.db.Preload("AccountBooks").First(account, id)
 	return account
 }
+
+func (dao *AccountDao) FindAllByUser(user *entity.User) []*entity.Account {
+	var accounts = make([]*entity.Account, 0)
+	dao.db.Where(&entity.Account{
+		UserId: user.ID,
+	}).Preload("AccountBooks").Find(&accounts)
+	return accounts
+}
+
 
