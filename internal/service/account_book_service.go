@@ -92,7 +92,7 @@ func (s *AccountBookService) SaveAccount(req *api.CreateOrUpdateAccountReq, user
 			"datetime is empty", "账目时间不能为空", nil)
 	}
 
-	accountTime, err := time.Parse(datetimeFormat, req.Datetime)
+	accountTime, err := time.ParseInLocation(datetimeFormat, req.Datetime, time.Local)
 	if err != nil {
 		logger.Error(err.Error())
 		return BuildResponse(api.RspCodeAccountBookErrorAccountTimeInvalid,
