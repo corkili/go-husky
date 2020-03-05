@@ -13,18 +13,24 @@ func (accountType AccountType) Name() string {
 }
 
 func GetAccountTypeByName(name string) (AccountType, error) {
-	if name == INCOME.Name() {
-		return INCOME, nil
-	} else if name == EXPENSE.Name() {
-		return EXPENSE, nil
+	if name == Income.Name() {
+		return Income, nil
+	} else if name == Expense.Name() {
+		return Expense, nil
+	} else if name == Loan.Name() {
+		return Loan, nil
+	} else if name == RepayLoan.Name() {
+		return RepayLoan, nil
 	} else {
 		return "", errors.New("invalid name of AccountType")
 	}
 }
 
 const (
-	INCOME AccountType = "income"
-	EXPENSE AccountType = "expense"
+	Income    AccountType = "income"
+	Expense   AccountType = "expense"
+	Loan      AccountType = "loan"
+	RepayLoan AccountType = "repay_loan"
 )
 
 type Account struct {
