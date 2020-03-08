@@ -21,8 +21,15 @@ type DeleteAccountReq struct {
 
 type RetrieveAccountReq struct {
 	All bool `json:"all"`
+	Sort Sort `json:"sort"`
+	Filters []Filter `json:"filters"`
+	Pagination Pagination `json:"pagination"`
 }
 
 type RetrieveAccountBookReq struct {
+	All bool `json:"all"`
+}
+
+type AccountStatisticReq struct {
 	All bool `json:"all"`
 }

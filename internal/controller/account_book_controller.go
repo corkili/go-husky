@@ -49,6 +49,12 @@ var accountBookRequestMappings = []server.RequestMapping{
 		Handler: RetrieveAccountBook,
 		Auth: true,
 	},
+	{
+		UrlPath: "/account_book/statistic",
+		Method: server.POST,
+		Handler: AccountStatistic,
+		Auth: true,
+	},
 }
 
 func GetAccountBookController() (controller *AccountBookController) {
@@ -155,3 +161,20 @@ func DeleteAccount(c *gin.Context) {
 	c.JSON(http.StatusOK, rsp)
 }
 
+func AccountStatistic(c *gin.Context) {
+	var req = &api.AccountStatisticReq{}
+	var rsp *api.Response
+	if err := c.ShouldBind(req); err != nil {
+		logger.Error("register error: %s", err.Error())
+		rsp = api.ReqDataInvalidResponse
+	} else {
+		user, err := userService.GetCurrentUser(c)
+		if err != nil {
+			logger.Error(err.Error())
+			rsp = api.NoAuthResponse
+		} else {
+			rsp = accountBookService.StatisticAccount(req, user)
+		}
+	}
+	c.JSON(http.StatusOK, rsp)
+}
