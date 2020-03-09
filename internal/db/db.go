@@ -32,11 +32,20 @@ var dsConf *DataSourceConf
 var instance *DatabaseConnection
 var once sync.Once
 
+type Test struct {
+	gorm.Model
+	TestInt int `gorm:"column:test_int"`
+	TestIntPtr *int `gorm:"column:test_int_ptr"`
+	TestStr string `gorm:"column:test_string"`
+	TestStrPtr *string `gorm:"column:test_string_ptr"`
+}
+
 var entities = []interface{} {
 	&entity.User{},
 	&entity.AccountBook{},
 	&entity.Account{},
 	&entity.Salary{},
+	&Test{},
 }
 
 func GetInstance() *DatabaseConnection {
