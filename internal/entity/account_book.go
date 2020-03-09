@@ -6,6 +6,10 @@ type AccountBook struct {
 	gorm.Model
 	Name string `gorm:"type:varchar(128);not null"`
 	Description string `gorm:"type:varchar(4096);not null"`
-	User User
+	User *User
 	UserId uint
+}
+
+func (accountBook *AccountBook) GetId() uint {
+	return accountBook.ID
 }

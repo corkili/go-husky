@@ -14,5 +14,13 @@ const (
 	RspCodeUserErrorPhoneNoExists 						= 2001006
 	RspCodeUserErrorPasswordInvalid 					= 2001007
 
+	RspCodeAccountBookErrorAccountTimeEmpty		= 2002001
+	RspCodeAccountBookErrorAccountTimeInvalid	= 2002002
+	RspCodeAccountBookErrorAccountTypeInvalid = 2002003
+	RspCodeAccountBookErrorMoneyNegative			= 2002004
+	RspCodeAccountBookErrorDescriptionEmpty		= 2002005
+	RspCodeAccountBookErrorAccountBooksEmpty	= 2002006
+	RspCodeAccountBookErrorAccountIdEmpty			= 2002007
+
 )
 

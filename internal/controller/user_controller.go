@@ -36,7 +36,7 @@ var userRequestMappings = []server.RequestMapping{
 		UrlPath: "/user/logout",
 		Method: server.POST,
 		Handler: UserLogout,
-		Auth: false,
+		Auth: true,
 	},
 }
 

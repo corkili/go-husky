@@ -26,3 +26,11 @@ func (dao *AccountBookDao) FindById(id uint) (accountBook *entity.AccountBook) {
 	return accountBook
 }
 
+func (dao *AccountBookDao) FindAllByUser(user *entity.User) []*entity.AccountBook {
+	var accountBooks = make([]*entity.AccountBook, 0)
+	dao.db.Where(&entity.AccountBook{
+		UserId: user.ID,
+	}).Find(&accountBooks)
+	return accountBooks
+}
+

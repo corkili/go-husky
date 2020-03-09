@@ -14,6 +14,6 @@ type Salary struct {
 	Subsidy float64 `gorm:"not null"`
 	Bonus float64 `gorm:"not null"`
 	Remark string `gorm:"type:varchar(4096);not null"`
-	User User
+	User *User
 	UserId uint
 }

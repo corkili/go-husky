@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -41,6 +42,34 @@ func CheckIfUserLogin(c *gin.Context) (ok bool, rsp *api.Response) {
 		return true, nil
 	} else {
 		return false, api.NoAuthResponse
+	}
+}
+
+func (s *UserService) CheckIfUserLogin(user *entity.User) (ok bool, rsp *api.Response) {
+	if user != nil {
+		_, exist := s.onlineUsers[user.ID]
+		if exist {
+			return true, nil
+		} else {
+			return false, api.NoAuthResponse
+		}
+	} else {
+		return false, api.NoAuthResponse
+	}
+}
+
+func (s *UserService) GetCurrentUser(c *gin.Context) (user *entity.User, err error) {
+	session := sessions.Default(c)
+	userIdRes := session.Get("userId")
+	var userId uint = 0
+	if userIdRes != nil {
+		userId = userIdRes.(uint)
+	}
+	user, exist := s.onlineUsers[userId]
+	if exist {
+		return user, nil
+	} else {
+		return nil, errors.New(api.NoAuthResponse.Msg)
 	}
 }
 
